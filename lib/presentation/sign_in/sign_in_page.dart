@@ -34,9 +34,10 @@ class _SignInPageState extends State<SignInPage> {
             print('loading');
           } else if (state is AuthLoginSuccess) {
             print(state.dataLogin);
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    HomePage(loginResponse: state.dataLogin)));
+            context.read<AuthCubit>().saveUserToLocal(state.dataLogin);
+          } else if (state is AuthSuccess) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const HomePage()));
           }
         },
         builder: (context, state) {
@@ -118,8 +119,8 @@ class _SignInPageState extends State<SignInPage> {
       ),
       onPressed: () {
         // panggil cubit to post user
-        final requestData = LoginRequest(
-            email: _emailController.text, password: _passwordController.text);
+        final requestData =
+            LoginRequest(email: "eve.holt@reqres.in", password: 'cityslicka');
         context.read<AuthCubit>().signInUser(requestData);
       },
       child: const Text(
